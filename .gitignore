@@ -1,6 +1,5 @@
 # Images
 /RESJPG
 
-# Binary
-/bin/
- 
+# VScode settings
+.vscode/settings.json
