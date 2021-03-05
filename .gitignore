@@ -4,4 +4,5 @@
 # VScode settings
 .vscode/settings.json
 
-src/File_Structure/__pycache__/FileManager.cpython-36.pyc
+#pycache
+src/File_Structure/__pycache__
