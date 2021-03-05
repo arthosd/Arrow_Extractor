@@ -6,13 +6,16 @@ class File_Manager:
     def __init__(self, path_directory):
         self.files_in_directory = os.listdir(path_directory)
         self.path_directory = path_directory
+        self.directories = []
+        self._list_directories()
         pass
 
-    def show_files(self):
-        for file in self.files_in_directory:
+    def show_files(self, path):
+        for file in os.listdir(path):
             print(file)
         pass
 
+    # Categorise les photo simialire dans leur dossier
     def categorize(self):
 
         array = dict()  # Dictionaire contenant toute les clés
@@ -44,3 +47,16 @@ class File_Manager:
                 file_where_to_copy.write(binary)
                 file_to_copy.close()
                 file_where_to_copy.close()
+        pass
+
+    # Private function  for list all the directories
+    def _list_directories(self):
+        temp = []
+
+        for file in os.listdir(self.path_directory):
+            if file[0] != '.':
+                temp.append(file)
+
+        self.directories = temp
+
+        return temp
