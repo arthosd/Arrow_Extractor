@@ -1,56 +1,51 @@
 import os
 import cv2
-import numpy as np
 import json
-import math
-from scipy.ndimage.measurements import label
+import numpy as np
 
-class Image :
+
+class Image:
     
-    def __init__(self,image_path):
+    def __init__(self, directory_path, image_name):
 
-        self.image_path = image_path
-        self.labels = None
-        self.num_labels = None
-        self.image = cv2.imread(image_path,0)
+        self.image_path = directory_path+"/"+image_name
+        self.directory_path = directory_path
+        self.image_name = image_name
+        self.image = cv2.imread(directory_path+"/"+image_name,0)
+        self.stats = None
+        self.nb_component = None
+
+        pass
+
+        """
+        Récupère les composantes connexe à partir d'une de l'image chargé
+        """
+    def get_connected_component (self):
+
+        self.nb_component , labels, self.stats, centroid = cv2.connectedComponentsWithStats(self.image,connectivity=4)
 
         pass
 
-    def remove_connected_comp(self,segmented_img, connected_comp_diam_limit=20):
-        """
-        Remove connected components of a binary image that are less than smaller than specified diameter.
-        :param segmented_img: Binary image.
-        :param connected_comp_diam_limit: Diameter limit
-        :return:
-        """
-        img = segmented_img.copy()
-        structure = np.ones((3, 3), dtype=np.int)
-        labeled, n_components = label(img, structure)
-        for i in range(n_components):
-            ixy = np.array(list(zip(*np.where(labeled == i))))
-            x1, y1 = ixy[0]
-            x2, y2 = ixy[-1]
-            dst = math.sqrt((x2 - x1) * 2 + (y2 - y1) * 2)
-            if dst < connected_comp_diam_limit:
-                for u, v in ixy:
-                    img[u, v] = 0
-        return img
+    def write_components (self,seuil,index):
 
-    def imshow_components(self,labels):
-        label_hue = np.uint8(179*labels/np.max(labels))
-        blank_ch = 255*np.ones_like(label_hue)
-        labeled_img = cv2.merge([label_hue, blank_ch, blank_ch])
+        compteur = 0
+        sizeX, sizeY = self.image.shape
 
-        labeled_img = cv2.cvtColor(labeled_img, cv2.COLOR_HSV2BGR)
+        for i in range (0, self.nb_component):
+            if self.stats[i,cv2.CC_STAT_AREA] > seuil : #Si on est au dessus du seuil
+                newImage = np.zeros((sizeX,sizeY))
+                debutX = self.stats[i,cv2.CC_STAT_LEFT]
+                debutY = self.stats[i,cv2.CC_STAT_TOP]
+                horizontal = self.stats[i,cv2.CC_STAT_WIDTH]
+                vertical = self.stats[i,cv2.CC_STAT_HEIGHT]
+                
+                for x in range(debutX, debutX+horizontal):
+                    for y in range(debutY, debutY+vertical):
+                        newImage [y,x] = self.image[y,x]
 
-        labeled_img[label_hue==0] = 0
+                cv2.imwrite(self.directory_path+"/"+"connex"+str(i*index/2)+'.jpg',newImage)
 
-        cv2.imshow('labeled.png', labeled_img)
-        cv2.waitKey()
+            else:
+                compteur = compteur +1
 
-    def find_connected_component (self):
-
-        self.num_labels ,self.labels = cv2.connectedComponents(self.image)
-        print (self.labels.dtype)
-
-        pass
+        return compteur

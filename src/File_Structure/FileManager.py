@@ -12,8 +12,8 @@ class File_Manager:
         self._list_directories()
         pass
 
-    def show_files(self, path):
-        for file in os.listdir(path):
+    def show_files(self):
+        for file in os.listdir(self.path_directory):
             print(file)
         pass
 
