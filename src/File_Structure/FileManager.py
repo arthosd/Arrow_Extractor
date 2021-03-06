@@ -7,6 +7,8 @@ class File_Manager:
         self.files_in_directory = os.listdir(path_directory)
         self.path_directory = path_directory
         self.directories = []
+        self.file_pathes = {}
+
         self._list_directories()
         pass
 
@@ -60,3 +62,7 @@ class File_Manager:
         self.directories = temp
 
         return temp
+
+    def save (self, path, data):
+        print ("Sauvegarde")
+        pass
