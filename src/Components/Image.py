@@ -14,8 +14,20 @@ class Image:
         self.image = cv2.imread(directory_path+"/"+image_name, 0)
         self.stats = None
         self.nb_component = None
+        self.centroid = None
 
         pass
+
+    def get_centroid(self, seuil):
+
+        centroid = []  # Tableau qui va contenir les centroids
+
+        for connected_component in range(self.nb_component):
+            if self.stats[connected_component, cv2.CC_STAT_AREA] > seuil:
+                # On l'ajoute dans le tableau
+                centroid.append(self.centroid[connected_component])
+
+        return centroid
 
         """
         Récupère les composantes connexe à partir d'une de l'image chargé
@@ -23,7 +35,7 @@ class Image:
 
     def get_connected_component(self):
 
-        self.nb_component, labels, self.stats, centroid = cv2.connectedComponentsWithStats(
+        self.nb_component, labels, self.stats, self.centroid = cv2.connectedComponentsWithStats(
             self.image, connectivity=4)
 
         pass
