@@ -29,9 +29,9 @@ class Image:
 
         return centroid
 
-        """
-        Récupère les composantes connexe à partir d'une de l'image chargé
-        """
+    """
+    Récupère les composantes connexe à partir d'une de l'image chargé
+    """
 
     def get_connected_component(self):
 

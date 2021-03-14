@@ -9,3 +9,8 @@ src/File_Structure/__pycache__
 
 #Pychache
 src/Components/__pycache__
+
+# Le dossier test
+/test
+
+src/Math/__pycache__
