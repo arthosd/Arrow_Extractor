@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import Math
+import math
 
 
 class GFD:
@@ -26,30 +26,32 @@ class GFD:
     def get_max_rad(self):
 
         width, height = self.image.shape  # Les dimensions de l'image
+        centroid_x = self.centroid[0]-(width//2)
+        centroid_y= self.centroid[1]-(height//2)
         candidates = [] # Va contenir les 4 candidats
-        MAXRAD = None
+        MAXRAD = 0.0
 
         find = False
 
         # On recherche sur le flan haut
-        for y in range(height):
+        for y in range(0,height):
             if find == True:
                 break
 
             for x in range(width):
                 if self.image[x, y] != 0:  # Si on est sur du blanc
-                    candidates.append((x, y)) # Top
+                    candidates.append((x-(width//2), y-(height//2))) # Top
                     find = True
                     break
 
         find = False
-        # On recherche sur le flan gauche
+        # On recherche sur le flan droit
         for x in range(width-1, 0, -1):
             if find == True:
                 break
             for y in range(0, height):
                 if self.image[y, x] != 0:
-                    candidates.append((x, y))# Right
+                    candidates.append((x-(width//2), y-(height//2)))# Right
                     find = True
                     break
 
@@ -59,9 +61,9 @@ class GFD:
         for y in range(height-1, 0, -1):
             if find == True:
                 break
-            for x in range(height):
+            for x in range(width):
                 if self.image[x, y] != 0:
-                    candidates.append((x, y)) # Bottom
+                    candidates.append((x-(width//2), y-(height//2))) # Bottom
                     find = True
                     break
 
@@ -72,13 +74,15 @@ class GFD:
                 break
             for y in range(0, height, 1):
                 if self.image[x, y] != 0:
-                    candidates.append((x, y)) # Right
+                    candidates.append((x-(width//2), y-(height//2))) # Right
                     find = True
                     break
 
-        for candidate in candidates:
-            print(candidate[0])
-
+            for candidate in candidates:
+                tmp = math.sqrt(math.pow(centroid_x-candidate[0],2)+math.pow(centroid_y-candidate[1],2))
+                if tmp > MAXRAD:
+                    MAXRAD = tmp
+                    
         return MAXRAD
 
     # Deplace de "index" sur l'axes des x
@@ -95,17 +99,19 @@ class GFD:
     Retourne le centroid de l'image en question
     """
 
-    def _get_centroid(self):
+    def _get_centroiSd(self):
         return self.centroid
 
-    def apply_gfd(self,m,n):
+    def apply_gfd(self,m,n): 
         """
         Algorithme principale fourrier
         """
-        N = self.image.shape[1] # On récupère la largeur de l'image
-        MAXRAD = _get_max_rad() # Il faut modifier l'algorithme avant
+        width, height = self.image.shape # On récupère la taille de l'image
+        MAXRAD = self.get_max_rad() # ON trouve la Maxrad de L'image
         
-        x = y = np.linspace(-(N-1)//2, (N-1)//2, N)
+        x = np.linspace(-(width-1)//2, (width-1)//2, width)
+        y = np.linspace(-(height-1)//2, (height-1)//2, height)
+
         X, Y = np.meshgrid(x, y)
 
         radius = np.sqrt(np.power(X, 2) + np.power(Y, 2)) / MAXRAD
@@ -121,15 +127,16 @@ class GFD:
 
         for rad in range(m):
             for ang in range(n):
-                tempR = image.dot(np.cos(2 * np.pi * rad * radius + ang * theta))
-                tempI = image.dot(np.sin(2 * np.pi * rad * radius + ang * theta))
+                tempR = self.image.dot(np.cos(2 * np.pi * rad * radius + ang * theta))
+                tempI = self.image.dot(np.sin(2 * np.pi * rad * radius + ang * theta))
                 FR[rad, ang] = np.sum(tempR)
                 FI[rad, ang] = np.sum(tempI)
 
                 if rad == 0 and ang == 0:
-                    FD[i] = Math.sqrt((2* (FR[0,0] * FR[0,0]))) / (np.pi* MAXRAD * MAXRAD)
+                    FD[i] = math.sqrt((2* (FR[0,0] * FR[0,0]))) / (np.pi* MAXRAD * MAXRAD)
                 else:
-                    FD[i] = Math.sqrt((FR[rad, ang] * FR[rad, ang]) + (FI[rad, ang] * FI[rad, ang])) / (Math.sqrt((2* (FR[0,0] * FR[0,0]))))
+                    FD[i] = math.sqrt((FR[rad, ang] * FR[rad, ang]) + (FI[rad, ang] * FI[rad, ang])) / (math.sqrt((2* (FR[0,0] * FR[0,0]))))
                     
                 i = i + 1
+                
         return FD
