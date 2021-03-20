@@ -38,8 +38,7 @@ class Image:
         self.nb_component, labels, self.stats, self.centroid = cv2.connectedComponentsWithStats(
             self.image, connectivity=4)
 
-        pass
-
+ 
     def write_components(self, seuil_inferieur, index):
 
         compteur = 0
