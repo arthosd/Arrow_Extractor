@@ -1,5 +1,4 @@
 import os
-from glob import glob
 import configparser
 
 class File_Manager :
@@ -9,10 +8,8 @@ class File_Manager :
         config = configparser.ConfigParser()
         config.read("src/Config/config.cfg")
 
-        print (config.get("RESSOURCES", "src_directory"))
-
         # On récupère le chemin du src images du fichier de config
-        self.directory_path = cfg = config.get("RESSOURCES", "src_directory")
+        self.directory_path = config.get("RESSOURCES", "src_directory")
         self.subdirectories = dict ()
         self.subdirectories_name = []
 
