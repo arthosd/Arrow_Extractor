@@ -1,6 +1,5 @@
 import os
 
-
 class File_Manager:
 
     def __init__(self, path_directory):
