@@ -72,7 +72,7 @@ class GFD :
 
     def apply_gfd(self,m,n): 
         """
-        Algorithme principale fourrier
+        Algorithme principale GFD
         """
         width, height = self.composant['image'].shape # On récupère la taille de l'image
         MAXRAD = self._get_max_rad() # ON trouve la Maxrad de L'image

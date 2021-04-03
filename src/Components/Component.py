@@ -1,5 +1,7 @@
 import os
 from Math.GFD import GFD
+import numpy as np
+import cv2
 
 class Component :
 
@@ -12,21 +14,33 @@ class Component :
         self.gfd = [] # Va contenir le gfd du composant
         self.image = data['image']
         self.directory = data['directory_path']
-        self.is_fleche = None
 
     """
     Ecrire le composant dans une image
     """
-    def write_component(self,path):
-        # ON écrit le composant
-        pass
+    def write_component(self, image_path):
+        # On écrit le composant
+
+        newImage = np.zeros((self.position['horizontal']+1, self.position['vertical']+1))
+
+        for x in range(self.position['x'], self.position['x']+self.position['horizontal']):
+            for y in range(self.position['y'], self.position['y']+self.position['vertical']):
+                newImage[x-self.position['x'], y-self.position['y']] = self.image[y, x]
+
+        cv2.imwrite(image_path, newImage)
 
     """
     Ecris les résultats dans un fichier
     """
-    def write_gfd (self):
-        # On écrit dans un fichier
-        pass
+    def write_gfd (self,file_path):
+        if len(self.gfd) == 0:
+            return False
+        
+        with open(file_path, "w") as file:
+            for number in self.gfd:
+                file.write(str(number)+'\n')
+
+        return True
 
     """
     Applique le GFD sur le composant
