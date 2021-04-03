@@ -1,67 +1,54 @@
 import os
+from glob import glob
+import configparser
 
-class File_Manager:
+class File_Manager :
 
-    def __init__(self, path_directory):
-        self.files_in_directory = os.listdir(path_directory)
-        self.path_directory = path_directory
-        self.directories = []
-        self.file_pathes = {}
+    def __init__(self):
 
-        self._list_directories()
-        pass
+        config = configparser.ConfigParser()
+        config.read("src/Config/config.cfg")
 
-    def show_files(self):
-        for file in os.listdir(self.path_directory):
-            print(file)
-        pass
+        print (config.get("RESSOURCES", "src_directory"))
 
-    # Categorise les photo simialire dans leur dossier
-    def categorize(self):
+        # On récupère le chemin du src images du fichier de config
+        self.directory_path = cfg = config.get("RESSOURCES", "src_directory")
+        self.subdirectories = dict ()
+        self.subdirectories_name = []
 
-        array = dict()  # Dictionaire contenant toute les clés
+        self._init()
 
-        for file in self.files_in_directory:
-            # On récupere le début de chaques nom
-            debut_nom_fichier = file[0:4]
+    """
+    initialise les attibuts de liste
+    """
+    def _init(self) :
+        self._save_sub_directories()
+        self._list_sub_directories ()
 
-            if debut_nom_fichier in array:
-                file_to_copy = open(self.path_directory +
-                                    "/"+file, "rb")  # Open in binary
-                file_where_to_copy = open(
-                    self.path_directory+"/"+debut_nom_fichier+"/"+file, "wb")  # Open in binary
-                binary = file_to_copy.read()
-                file_where_to_copy.write(binary)
-                file_to_copy.close()
-                file_where_to_copy.close()
+    """
+    Liste les repertoires du repertoire source. (Et créer une dictionnaire pour les garder en mémoire)
+    """
+    def _save_sub_directories (self):
 
-            else:
-                # Si la clée n'existe pas alors on la créer
-                array[debut_nom_fichier] = True
-                # On crée l'entrée dans le dict
-                os.makedirs(self.path_directory+"/"+debut_nom_fichier)
-                file_to_copy = open(self.path_directory +
-                                    "/"+file, "rb")  # Open in binary
-                file_where_to_copy = open(
-                    self.path_directory+"/"+debut_nom_fichier+"/"+file, "wb")  # Open in binary
-                binary = file_to_copy.read()
-                file_where_to_copy.write(binary)
-                file_to_copy.close()
-                file_where_to_copy.close()
-        pass
-
-    # Private function  for list all the directories
-    def _list_directories(self):
-        temp = []
-
-        for file in os.listdir(self.path_directory):
+        for file in os.listdir(self.directory_path):
             if file[0] != '.':
-                temp.append(file)
+                if os.path.isdir(self.directory_path+"/"+file) == True :
+                    self.subdirectories [file] = self.directory_path+"/"+file+"/"
 
-        self.directories = temp
+    """
+    Listes et enregistre les NOMS des répoertoires dans la classe
+    """
+    def _list_sub_directories (self) :
 
-        return temp
+        for file in os.listdir(self.directory_path):
+            if file[0] != '.':
+                if os.path.isdir(self.directory_path+"/"+file) == True :
+                    self.subdirectories_name.append(file)
 
-    def save (self, path, data):
-        print ("Sauvegarde")
-        pass
+        return self.subdirectories_name
+
+    """
+    Retourne le chemin d'un sous dossier
+    """
+    def get_subDirectory_path (self, directory_name):
+        return self.subdirectories(directory_name)
