@@ -84,3 +84,20 @@ class Target:
             os.mkdir(self.path+"/"+directory_name)
             self.subdirectories_name.append(directory_name)
             self.subdirectories_name[name] = self.path+"/"+directory_name+"/"
+
+    """
+    Récupère tous les fichiers gfd dans les subdirectories
+    """
+
+    def get_all_gfd_files(self):
+
+        gfd_files = []
+
+        for subs in os.listdir(self.path):
+            for i in os.listdir(self.path+subs+"/image/"):
+                gfd_files.append({
+                    "image": subs,
+                    "path": self.path+subs+"/image/"+i
+                })
+
+        return gfd_files
