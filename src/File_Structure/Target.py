@@ -13,6 +13,8 @@ class Target:
         self.subdirectories = dict()
         self.subdirectories_name = []
 
+        self._init()
+
     """
     Initialise la classe
     """
@@ -46,17 +48,17 @@ class Target:
 
         # Si le repertoire n'existe pas, on le créer
         if os.path.exists(self.path) == False:
-            self._create_target_directory(self.path)
+            self._create_target_directory()
 
-    """
+    """ 
     Liste les repertoires du repertoire source. (Et créer une dictionnaire pour les garder en mémoire)
     """
 
     def _save_sub_directories(self):
-        for file in os.listdir(self.directory_path):
+        for file in os.listdir(self.path):
             if file[0] != '.':
-                if os.path.isdir(self.directory_path+"/"+file) == True:
-                    self.subdirectories[file] = self.directory_path + \
+                if os.path.isdir(self.path+"/"+file) == True:
+                    self.subdirectories[file] = self.path + \
                         "/"+file+"/"
 
     """
@@ -65,9 +67,9 @@ class Target:
 
     def _list_sub_directories(self):
 
-        for file in os.listdir(self.directory_path):
+        for file in os.listdir(self.path):
             if file[0] != '.':
-                if os.path.isdir(self.directory_path+"/"+file) == True:
+                if os.path.isdir(self.path+"/"+file) == True:
                     self.subdirectories_name.append(file)
 
         return self.subdirectories_name

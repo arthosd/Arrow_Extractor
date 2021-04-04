@@ -35,7 +35,7 @@ class GFD:
             if find == True:
                 break
             for y in range(0, height):
-                if self.composant['image'][y, x] != 0:
+                if self.composant['image'][x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Right
                     find = True
                     break
