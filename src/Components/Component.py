@@ -61,7 +61,8 @@ class Component:
                     str(numero_composant)+".gfd.resultat", "w")
 
         for number in self.gfd:
-            file.write(str(number)+'\n')
+            to_write = float(number)
+            file.write(str(to_write)+"\n")
 
         return True
 

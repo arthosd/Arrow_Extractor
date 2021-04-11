@@ -94,10 +94,10 @@ class Target:
         gfd_files = []
 
         for subs in os.listdir(self.path):
-            for i in os.listdir(self.path+subs+"/image/"):
+            for i in os.listdir(self.path+subs+"/gfd/"):
                 gfd_files.append({
                     "image": subs,
-                    "path": self.path+subs+"/image/"+i
+                    "path": self.path+subs+"/gfd/"+i
                 })
 
         return gfd_files
