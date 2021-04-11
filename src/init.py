@@ -2,24 +2,15 @@ from Components.Image import Image
 from Components.Component import Component
 from File_Structure.FileManager import File_Manager
 from File_Structure.Target import Target
+import numpy as np
 import os
 
-fm = File_Manager()  # A retirer peut etre
-target = Target()  # idem
+image = Image("/home/elie/Documents/Projet/Fac/Arrow_Extractor/RESJPG/E110/",
+              "E1106402.jpg.pgm.jpg")  # On ouvre l'image
 
-for key, path in fm.subdirectories.items():
-    files = os.listdir(path)  # Pour tout les fichier dans les subdirectories
+image.calculate_components(1500, 8500)  # On calcul tout les composant
 
-    for file in files:  # On traite chaque fichier
 
-        image = Image(path, file)  # On déclare une nouvelle image
-        image.init_components(200)  # On apllique les initialisations
-        composant_images = image.composants  # Récupère les composants de chaques l'image
+gfd = image.calculate_components_gfd(6)
 
-        compteur = 0
-
-        for composant in composant_images:
-            composant.apply_gfd(5, 3)  # On calcul gfd de chaque composants
-            # On écrit les images et les fichiers
-            composant.write_components(compteur)
-            compteur = compteur + 1
+print(gfd)

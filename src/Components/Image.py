@@ -1,53 +1,79 @@
-import os
 import cv2
-import numpy as np
 from Components.Component import Component
 
 
 class Image:
 
     def __init__(self, directory_path, image_name):
-        self.directory_path = directory_path  # Le chemin du repertoire
-        self.image_name = image_name  # nom de l'image
-        self.image_path = directory_path+image_name  # Le chemin de l'image
-        self.image = cv2.imread(
-            directory_path+image_name, 0)  # L'image en lecture
-        self.composants = []  # On va contenir les composants de l'image
+        """
+        Constructeur de la classe
+        """
 
-    """
-    Récupère composants connexe
-    """
+        # Image
+        self.__directory = directory_path
+        self.__image_name = image_name
+        self.__image_path = directory_path+image_name
+        self.__image = self.image = cv2.imread(
+            directory_path+image_name, 0)
 
-    def _get_connected_component(self):
-        return cv2.connectedComponentsWithStats(self.image, connectivity=8)
+        # Composants
+        self.__components = []
+        self.__clustered = []
 
-    """
-    Crée les composants
-    """
+    def calculate_components(self, seuil_inferieur, seuil_superieur):
+        """
+        Calcule les composantes connexe de l'image
+        """
 
-    def init_components(self, seuil_inferieur):
+        nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
+            self.__image, connectivity=8)
 
-        # Récupère les composantes connexes
-        nb_component, labels, stats, centroid = self._get_connected_component()
-
-        # On crée toutes les composantes connexes
+        # On itère dans tous les composents calculés
         for i in range(0, nb_component):
-            if stats[i, cv2.CC_STAT_AREA] > seuil_inferieur:
-                position = {
+            # S'il est dans le seuil en terme de taille, on le choisit
+            if stats[i, cv2.CC_STAT_AREA] > seuil_inferieur and stats[i, cv2.CC_STAT_AREA] < seuil_superieur:
+
+                position = {  # Valeurs de position sur l'image
                     "x": stats[i, cv2.CC_STAT_LEFT],
                     "y": stats[i, cv2.CC_STAT_TOP],
                     "horizontal": stats[i, cv2.CC_STAT_WIDTH],
                     "vertical": stats[i, cv2.CC_STAT_HEIGHT],
                 }
 
-                data = {
+                data = {  # Données globale
                     'centroid': centroid[i],
                     'position': position,
-                    'image_path': self.image_path,
+                    'image_path': self.__image_path,
                     'area': stats[i, cv2.CC_STAT_AREA],
-                    'image': self.image,
-                    'nom_image': self.image_name,
-                    'directory_path': self.directory_path
+                    'image': self.__image,
+                    'nom_image': self.__image_name,
+                    'directory_path': self.__directory
                 }
 
-                self.composants.append(Component(data))
+                self.__components.append(Component(data))
+
+    def calculate_components_gfd(self, index):
+
+        gfd = self.__components[index].apply_gfd(5, 4)
+
+        return gfd
+
+    def draw_component(self, index):
+        self.__components[index].copy_in_image(index)
+
+    # SETTERS ET GETTERS
+
+    def get_directory(self):
+        return self.__directory
+
+    def get_image(self):
+        return self.__image
+
+    def get_image_name(self):
+        return self.__image_name
+
+    def get_path(self):
+        return self.__image_path
+
+    def get_components(self):
+        return self.__components

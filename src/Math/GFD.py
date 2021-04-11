@@ -1,18 +1,17 @@
-import os
 import numpy as np
 import math
 
 
 class GFD:
 
-    def __init__(self, composant):
-        self.composant = composant
+    def __init__(self, composant_data):
+        self.__composant = composant_data
 
     def _get_max_rad(self):
 
-        width, height = self.composant['image'].shape
-        centroid_x = self.composant['centroid'][0] - (width // 2)
-        centroid_y = self.composant['centroid'][1] - (height // 2)
+        width, height = self.__composant['image'].shape
+        centroid_x = self.__composant['centroid'][0] - (width // 2)
+        centroid_y = self.__composant['centroid'][1] - (height // 2)
 
         candidates = []
         MAXRAD = 0.0
@@ -24,7 +23,7 @@ class GFD:
                 break
 
             for x in range(width):
-                if self.composant['image'][x, y] != 0:  # Si on est sur du blanc
+                if self.__composant['image'][x, y] != 0:  # Si on est sur du blanc
                     candidates.append((x-(width//2), y-(height//2)))  # Top
                     find = True
                     break
@@ -35,7 +34,7 @@ class GFD:
             if find == True:
                 break
             for y in range(0, height):
-                if self.composant['image'][x, y] != 0:
+                if self.__composant['image'][x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Right
                     find = True
                     break
@@ -47,7 +46,7 @@ class GFD:
             if find == True:
                 break
             for x in range(width):
-                if self.composant['image'][x, y] != 0:
+                if self.__composant['image'][x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Bottom
                     find = True
                     break
@@ -58,7 +57,7 @@ class GFD:
             if find == True:
                 break
             for y in range(0, height, 1):
-                if self.composant['image'][x, y] != 0:
+                if self.__composant['image'][x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Right
                     find = True
                     break
@@ -71,45 +70,57 @@ class GFD:
 
         return MAXRAD
 
-    def apply_gfd(self, m, n):
-        """
-        Algorithme principale GFD
-        """
-        width, height = self.composant['image'].shape  # On récupère la taille de l'image
-        MAXRAD = self._get_max_rad()  # ON trouve la Maxrad de L'image
+    def gfd(self, m, n):
 
-        x = np.linspace(-(width-1)//2, (width-1)//2, width)
-        y = np.linspace(-(height-1)//2, (height-1)//2, height)
+        image = self.__composant['image']                  # Image
+        gfd_numbers = np.zeros((m*n, 1))                   # Les valeurs GFD
+        FR = np.zeros((m, n))                              # FD partie réelle
+        FI = np.zeros((m, n))                              # FD partie imag
+        width, height = self.__composant['image'].shape    # Taille de l'image
+        MAXRAD = self._get_max_rad()                       # La radian Maximal
+        centroid = {"x": self.__composant["centroid"][0],  # Le centroid
+                    "y": self.__composant["centroid"][1]
+                    }
 
-        X, Y = np.meshgrid(x, y)
+        # Polar Fourier transform
+        for rad in range(0, m):
+            for ang in range(0, n):
 
-        radius = np.sqrt(np.power(X, 2) + np.power(Y, 2)) / MAXRAD
+                for x in range(0, width):
+                    for y in range(0, height):
 
-        theta = np.arctan2(Y, X)
-        theta[theta < 0] = theta[theta < 0] + (2 * np.pi)
+                        radius = math.sqrt(
+                            math.pow((x-centroid["x"]), 2) + (math.pow((y-centroid["y"]), 2)))
 
-        FR = np.zeros((m, n))
-        FI = np.zeros((m, n))
-        FD = np.zeros((m*n, 1))
+                        theta = math.atan2(
+                            (y - centroid["x"]), (x - centroid["y"]))
 
-        i = 0
+                        if theta < 0:
+                            theta = theta + (2*math.pi)
 
-        for rad in range(m):
-            for ang in range(n):
-                tempR = self.composant['image'].dot(
-                    np.cos(2 * np.pi * rad * radius + ang * theta))
-                tempI = self.composant['image'].dot(
-                    np.sin(2 * np.pi * rad * radius + ang * theta))
-                FR[rad, ang] = np.sum(tempR)
-                FI[rad, ang] = np.sum(tempI)
+                        FR[rad, ang] = FR[rad, ang] + image[x, y] * \
+                            math.cos(2 * math.pi * rad *
+                                     (radius / MAXRAD) + ang * theta)
+
+                        FI[rad, ang] = FR[rad, ang] - image[x, y] * \
+                            math.sin(2 * math.pi * rad *
+                                     (radius / MAXRAD) + ang * theta)
+
+        # On calcule GFD
+
+        DC = None
+
+        for rad in range(0, m):
+            for ang in range(0, n):
 
                 if rad == 0 and ang == 0:
-                    FD[i] = math.sqrt((2 * (FR[0, 0] * FR[0, 0]))
-                                      ) / (np.pi * MAXRAD * MAXRAD)
+                    DC = math.sqrt(
+                        math.pow(FR[0, 0], 2) + math.pow(FR[0, 0], 2))
+
+                    gfd_numbers[0] = DC / (math.pi * math.pow(MAXRAD, 2))
+
                 else:
-                    FD[i] = math.sqrt((FR[rad, ang] * FR[rad, ang]) + (FI[rad, ang]
-                                      * FI[rad, ang])) / (math.sqrt((2 * (FR[0, 0] * FR[0, 0]))))
+                    gfd_numbers[rad*n + ang] = (math.sqrt(
+                        math.pow(FR[rad, ang], 2)) + math.sqrt(math.pow(FI[rad, ang], 2))) / DC
 
-                i = i + 1
-
-        return FD
+        return gfd_numbers
