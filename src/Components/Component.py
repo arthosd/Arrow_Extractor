@@ -11,16 +11,19 @@ class Component:
         self.__gfd = []                     # Les Valeurs du GFD
         self.__position = data['position']  # Les positions des centroids
         self.__image = data['image']                       # L'image de l'IMAGE
-        self.__image_component = self._copy_in_image       # L'image du composants
+        self.__image_component = self._copy_in_image()       # L'image du composants
 
     def apply_gfd(self, m, n):
         """
         Applique la fonction GFD sur le composent
         """
-        gfd = GFD(self.__data, self.__image_component)
+        image = self.__image_component
+        gfd = GFD(self.__data, image)
+        print(image.shape)
+
         self.__gfd = gfd.gfd(m, n)
 
-    def _copy_in_image(self, index):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
+    def _copy_in_image(self):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
         """
         Met dans une image la zone du composant
         """
@@ -41,3 +44,6 @@ class Component:
 
     def get_gfd(self):
         return self.__gfd
+
+    def get_image_component(self):
+        return self.__image_component

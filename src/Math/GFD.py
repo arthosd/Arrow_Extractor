@@ -74,11 +74,14 @@ class GFD:
     def gfd(self, m, n):
 
         image = self.__image_component                     # Image
+        print(image.shape)
         gfd_numbers = np.zeros((m*n, 1))                   # Les valeurs GFD
         FR = np.zeros((m, n))                              # FD partie réelle
         FI = np.zeros((m, n))                              # FD partie imag
-        width, height = self.__composant['image'].shape    # Taille de l'image
+        width, height = image.shape                        # Taille de l'image
         MAXRAD = self._get_max_rad()                       # La radian Maximal
+        print(MAXRAD)
+
         centroid = {"x": self.__composant["centroid"][0],  # Le centroid
                     "y": self.__composant["centroid"][1]
                     }
@@ -118,9 +121,13 @@ class GFD:
                     DC = math.sqrt(
                         math.pow(FR[0, 0], 2) + math.pow(FR[0, 0], 2))
 
+                    print("DC -> "+str(DC))
+
                     gfd_numbers[0] = DC / (math.pi * math.pow(MAXRAD, 2))
 
                 else:
+                    print("DC -> "+str(DC))
+
                     gfd_numbers[rad*n + ang] = (math.sqrt(
                         math.pow(FR[rad, ang], 2)) + math.sqrt(math.pow(FI[rad, ang], 2))) / DC
 
