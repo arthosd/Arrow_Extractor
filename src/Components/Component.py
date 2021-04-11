@@ -6,12 +6,13 @@ import os
 
 class Component:
 
-    def __init__(self, data):
+    def __init__(self, data, index):
         self.__data = data                  # Données de l'image
         self.__gfd = []                     # Les Valeurs du GFD
         self.__position = data['position']  # Les positions des centroids
         self.__image = data['image']                       # L'image de l'IMAGE
         self.__image_component = self._copy_in_image()       # L'image du composants
+        self.__index = index
 
     def apply_gfd(self, m, n):
         """
@@ -47,3 +48,6 @@ class Component:
 
     def get_image_component(self):
         return self.__image_component
+
+    def get_index(self):
+        return self.__index
