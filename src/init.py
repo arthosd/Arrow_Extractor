@@ -5,12 +5,14 @@ from File_Structure.Target import Target
 import numpy as np
 import os
 
+
+target = Target()
+
+# On load l'image
 image = Image("/home/elie/Documents/Projet/Fac/Arrow_Extractor/RESJPG/E110/",
-              "E1106402.jpg.pgm.jpg")  # On ouvre l'image
+              "E1106402.jpg.pgm.jpg")
 
-image.calculate_components(1500, 8500)  # On calcul tout les composant
-
-
-gfd = image.calculate_components_gfd(6)
-
-print(gfd)
+# On calcul les composantes connexe
+image.calculate_components(1500, 8500)
+image.calculate_gfds()
+image.save_data(target.path)
