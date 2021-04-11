@@ -7,33 +7,32 @@ import os
 class Component:
 
     def __init__(self, data):
-        self.__data = data
-        self.__gfd = []
-        # A EFFACER
-        self.position = data['position']
-        self.image = data['image']
+        self.__data = data                  # Données de l'image
+        self.__gfd = []                     # Les Valeurs du GFD
+        self.__position = data['position']  # Les positions des centroids
+        self.__image = data['image']                       # L'image de l'IMAGE
+        self.__image_component = self._copy_in_image       # L'image du composants
 
     def apply_gfd(self, m, n):
         """
         Applique la fonction GFD sur le composent
         """
-        gfd = GFD(self.__data)
-        self.gfd = gfd.gfd(m, n)
-        print(self.gfd)
+        gfd = GFD(self.__data, self.__image_component)
+        self.__gfd = gfd.gfd(m, n)
 
-    def copy_in_image(self, index):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
+    def _copy_in_image(self, index):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
         """
         Met dans une image la zone du composant
         """
         newImage = np.zeros(
-            (self.position['horizontal']+1, self.position['vertical']+1))
+            (self.__position['horizontal']+1, self.__position['vertical']+1))
 
-        for x in range(self.position['x'], self.position['x']+self.position['horizontal']):
-            for y in range(self.position['y'], self.position['y']+self.position['vertical']):
-                newImage[x-self.position['x'], y -
-                         self.position['y']] = self.image[y, x]
+        for x in range(self.__position['x'], self.__position['x']+self.__position['horizontal']):
+            for y in range(self.__position['y'], self.__position['y']+self.__position['vertical']):
+                newImage[x-self.__position['x'], y -
+                         self.__position['y']] = self.__image[y, x]
 
-        cv2.imwrite("image"+str(index)+".jpg", newImage)
+        return newImage
 
     # GETTERS / SETTERS
 

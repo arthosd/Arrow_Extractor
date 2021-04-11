@@ -52,15 +52,6 @@ class Image:
 
                 self.__components.append(Component(data))
 
-    def calculate_components_gfd(self, index):
-
-        gfd = self.__components[index].apply_gfd(5, 4)
-
-        return gfd
-
-    def draw_component(self, index):
-        self.__components[index].copy_in_image(index)
-
     # SETTERS ET GETTERS
 
     def get_directory(self):

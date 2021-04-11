@@ -4,12 +4,13 @@ import math
 
 class GFD:
 
-    def __init__(self, composant_data):
+    def __init__(self, composant_data, image_component):
         self.__composant = composant_data
+        self.__image_component = image_component
 
     def _get_max_rad(self):
 
-        width, height = self.__composant['image'].shape
+        width, height = self.__image_component.shape
         centroid_x = self.__composant['centroid'][0] - (width // 2)
         centroid_y = self.__composant['centroid'][1] - (height // 2)
 
@@ -23,7 +24,7 @@ class GFD:
                 break
 
             for x in range(width):
-                if self.__composant['image'][x, y] != 0:  # Si on est sur du blanc
+                if self.__image_component[x, y] != 0:  # Si on est sur du blanc
                     candidates.append((x-(width//2), y-(height//2)))  # Top
                     find = True
                     break
@@ -34,7 +35,7 @@ class GFD:
             if find == True:
                 break
             for y in range(0, height):
-                if self.__composant['image'][x, y] != 0:
+                if self.__image_component[x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Right
                     find = True
                     break
@@ -46,7 +47,7 @@ class GFD:
             if find == True:
                 break
             for x in range(width):
-                if self.__composant['image'][x, y] != 0:
+                if self.__image_component[x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Bottom
                     find = True
                     break
@@ -57,7 +58,7 @@ class GFD:
             if find == True:
                 break
             for y in range(0, height, 1):
-                if self.__composant['image'][x, y] != 0:
+                if self.__image_component[x, y] != 0:
                     candidates.append((x-(width//2), y-(height//2)))  # Right
                     find = True
                     break
@@ -72,7 +73,7 @@ class GFD:
 
     def gfd(self, m, n):
 
-        image = self.__composant['image']                  # Image
+        image = self.__image_component                     # Image
         gfd_numbers = np.zeros((m*n, 1))                   # Les valeurs GFD
         FR = np.zeros((m, n))                              # FD partie réelle
         FI = np.zeros((m, n))                              # FD partie imag
