@@ -55,7 +55,7 @@ class Image:
                     'directory_path': self.__directory
                 }
 
-                self.__components.append(Component(data), index)
+                self.__components.append(Component(data, index))
                 index = index + 1
 
     def calculate_gfds(self):
