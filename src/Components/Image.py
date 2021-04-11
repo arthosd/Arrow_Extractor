@@ -1,4 +1,6 @@
 from Components.Component import Component
+from sklearn.cluster import KMeans
+
 import cv2
 import os
 
@@ -29,6 +31,8 @@ class Image:
         nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
             self.__image, connectivity=8)
 
+        index = 0
+
         # On itère dans tous les composents calculés
         for i in range(0, nb_component):
             # S'il est dans le seuil en terme de taille, on le choisit
@@ -51,7 +55,8 @@ class Image:
                     'directory_path': self.__directory
                 }
 
-                self.__components.append(Component(data))
+                self.__components.append(Component(data), index)
+                index = index + 1
 
     def calculate_gfds(self):
         """
@@ -107,6 +112,13 @@ class Image:
         image_to_write = self.__components[index].get_image_component()
         # On écrit l'image
         cv2.imwrite(path+"image"+str(index)+".jpg", image_to_write)
+
+    def clustrize(self):
+        """
+        Clusterize les données et les stock dans l'array en attribut
+        """
+
+        nb_cluster = 2
 
     # SETTERS ET GETTERS
 
