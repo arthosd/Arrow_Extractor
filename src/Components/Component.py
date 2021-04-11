@@ -20,7 +20,6 @@ class Component:
         """
         image = self.__image_component
         gfd = GFD(self.__data, image)
-        print(image.shape)
 
         self.__gfd = gfd.gfd(m, n)
 
