@@ -18,5 +18,5 @@ for key, path in fm.subdirectories.items():
         image.calculate_components(1500, 8500)  # On calcul les CC
         image.calculate_gfds()                  # On calcul les GFDs
         if image.get_components != 0:
-            image.clustrize()                   # On clusterize
+            image.clusterize()                   # On clusterize
             image.save_data(target.path)        # On enregistre les données
