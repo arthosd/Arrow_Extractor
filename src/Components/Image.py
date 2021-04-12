@@ -29,6 +29,13 @@ class Image:
         self.__components = []
         self.__clustered = []
 
+    def invert_color(self):
+        """
+        Inverse la couleur de l'image.
+        """
+        temp_image = (255 - self.__image)
+        cv2.imwrite(self.__image_path+".inverted.jpg", temp_image)
+
     def calculate_components(self, seuil_inferieur, seuil_superieur):
         """
         Calcule les composantes connexe de l'image
