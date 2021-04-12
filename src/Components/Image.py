@@ -67,7 +67,7 @@ class Image:
         """
 
         for item in self.__components:
-            item.apply_gfd(5, 4)
+            item.apply_gfd()
 
     def save_data(self, directory_path):
         """
