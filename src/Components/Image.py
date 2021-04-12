@@ -73,8 +73,9 @@ class Image:
         main_image_directory_path = directory_path+self.__image_name
         images_directory_path = main_image_directory_path+"/images"
         gfd_directory_path = main_image_directory_path+"/gfd"
+        cluster_directory = main_image_directory_path+"/cluster"
 
-        # Vérification de tout les repertoires
+        # Vérification de tout les répertoires
 
         if os.path.exists(main_image_directory_path) == False:
             os.mkdir(main_image_directory_path)
@@ -85,9 +86,30 @@ class Image:
         if os.path.exists(gfd_directory_path) == False:
             os.mkdir(gfd_directory_path)
 
+        if os.path.exists(cluster_directory) == False:
+            os.mkdir(cluster_directory)
+
         for index in range(0, len(self.__components)):  # Pour tout les composants
             self._save_gfd(index, gfd_directory_path+"/")
             self._save_component_image(index, images_directory_path+"/")
+
+        self._save_cluster(cluster_directory+"/")
+
+    def _save_cluster(self, path):
+        """
+        Sauvegarde les clusters dans un sous dossier
+        """
+
+        for i in range(0, 2):
+            os.mkdir(path+"/cluster"+str(i))
+
+        compteur = 0
+        for component in self.__components:
+
+            self._save_component_image(
+                compteur, path+"cluster"+str(self.__clustered[compteur])+"/")
+
+            compteur = compteur + 1
 
     def _save_gfd(self, index, path):
         """
@@ -112,10 +134,11 @@ class Image:
         # On écrit l'image
         cv2.imwrite(path+"image"+str(index)+".jpg", image_to_write)
 
-    def clustrize(self, nombre_cluster):
+    def clustrize(self, nombre_cluster=2, save=False, target_path=None):
         """
         Clusterize les données et les stock dans l'array en attribut
         """
+
         nb_cluster = nombre_cluster
         # On déclare le tableau que contient les données
         gfd = np.zeros(
@@ -129,31 +152,9 @@ class Image:
 
         model = KMeans(n_clusters=nb_cluster)
         model.fit(gfd)
+
         print(model.labels_)
-
-        """ 
-        model = KMeans(n_clusters=nb_cluster)  # on déclare notre model
-        model.fit(gfd)"""
-
-        """
-        array = target.get_all_gfd_files()
-
-        ##Lis les fichiers pour créer une liste de liste de float
-        gfd = []
-        for element in array:
-            path = element['gfd']
-            with open(path, 'r') as filein:
-                values = filein.readlines()
-                for i in range(values):
-                    values[i] = float(values[i])
-                gfd.append(values)
-
-        ## K-means (nombre de clusters souhaités en paramètre)
-        model = KMeans(8).fit(gfd)
-
-        for i in range(len(array)):
-            array[i]['label'] = model[i]
-        """
+        self.__clustered = model.labels_
 
     # SETTERS ET GETTERS
 
