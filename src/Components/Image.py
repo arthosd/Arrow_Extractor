@@ -3,6 +3,7 @@ from sklearn.cluster import KMeans
 from Utils.Utils import convert_float_array
 
 import numpy as np
+import configparser
 import cv2
 import os
 
@@ -13,6 +14,9 @@ class Image:
         """
         Constructeur de la classe
         """
+        # Configuration
+        self.__config = configparser.ConfigParser()
+        self.__config.read("src/Config/config.cfg")
 
         # Image
         self.__directory = directory_path
@@ -100,7 +104,7 @@ class Image:
         Sauvegarde les clusters dans un sous dossier
         """
 
-        for i in range(0, 2):
+        for i in range(0, int(self.__config.get("CLUSTER", "nombre_cluster"))):
             os.mkdir(path+"/cluster"+str(i))
 
         compteur = 0
@@ -134,12 +138,12 @@ class Image:
         # On écrit l'image
         cv2.imwrite(path+"image"+str(index)+".jpg", image_to_write)
 
-    def clustrize(self, nombre_cluster=2, save=False, target_path=None):
+    def clustrize(self, save=False, target_path=None):
         """
         Clusterize les données et les stock dans l'array en attribut
         """
 
-        nb_cluster = nombre_cluster
+        nb_cluster = int(self.__config.get("CLUSTER", "nombre_cluster"))
         # On déclare le tableau que contient les données
         gfd = np.zeros(
             (len(self.__components), int(self.__components[0].get_gfd_size())))

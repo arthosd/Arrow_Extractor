@@ -1,10 +1,16 @@
 import numpy as np
 import math
+import configparser
 
 
 class GFD:
 
     def __init__(self, composant_data, image_component):
+
+        # Configuration
+        self.__config = configparser.ConfigParser()
+        self.__config.read("src/Config/config.cfg")
+
         self.__composant = composant_data
         self.__image_component = image_component
 
@@ -71,8 +77,10 @@ class GFD:
 
         return MAXRAD
 
-    def gfd(self, m, n):
+    def gfd(self):
 
+        m = int(self.__config.get("GFD", "rad"))           # Radian
+        n = int(self.__config.get("GFD", "ang"))           # Ang
         image = self.__image_component                     # Image
         gfd_numbers = np.zeros((m*n, 1))                   # Les valeurs GFD
         FR = np.zeros((m, n))                              # FD partie réelle

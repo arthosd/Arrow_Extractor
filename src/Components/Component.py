@@ -1,12 +1,18 @@
 import numpy as np
 import cv2
 from Math.GFD import GFD
+import configparser
 import os
 
 
 class Component:
 
     def __init__(self, data):
+
+        # Fichier de config
+        self.__config = configparser.ConfigParser()
+        self.__config.read("src/Config/config.cfg")
+
         self.__data = data                  # Données de l'image
         self.__gfd = []                     # Les Valeurs du GFD
         self.__position = data['position']  # Les positions des centroids
@@ -14,14 +20,14 @@ class Component:
         self.__image_component = self._copy_in_image()     # L'image du composants
         self.__gfd_size = 0                 # La taille du GFD
 
-    def apply_gfd(self, m, n):
+    def apply_gfd(self):
         """
         Applique la fonction GFD sur le composent
         """
         image = self.__image_component
         gfd = GFD(self.__data, image)
 
-        reponse = gfd.gfd(m, n)
+        reponse = gfd.gfd()
 
         self.__gfd = reponse[1]
         self.__gfd_size = reponse[0]
