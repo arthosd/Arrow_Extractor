@@ -6,13 +6,13 @@ import os
 
 class Component:
 
-    def __init__(self, data, index):
+    def __init__(self, data):
         self.__data = data                  # Données de l'image
         self.__gfd = []                     # Les Valeurs du GFD
         self.__position = data['position']  # Les positions des centroids
         self.__image = data['image']                       # L'image de l'IMAGE
-        self.__image_component = self._copy_in_image()       # L'image du composants
-        self.__index = index
+        self.__image_component = self._copy_in_image()     # L'image du composants
+        self.__gfd_size = 0                 # La taille du GFD
 
     def apply_gfd(self, m, n):
         """
@@ -21,7 +21,10 @@ class Component:
         image = self.__image_component
         gfd = GFD(self.__data, image)
 
-        self.__gfd = gfd.gfd(m, n)
+        reponse = gfd.gfd(m, n)
+
+        self.__gfd = reponse[1]
+        self.__gfd_size = reponse[0]
 
     def _copy_in_image(self):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
         """
@@ -48,5 +51,5 @@ class Component:
     def get_image_component(self):
         return self.__image_component
 
-    def get_index(self):
-        return self.__index
+    def get_gfd_size(self):
+        return self.__gfd_size

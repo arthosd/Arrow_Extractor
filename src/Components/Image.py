@@ -1,6 +1,8 @@
 from Components.Component import Component
 from sklearn.cluster import KMeans
+from Utils.Utils import convert_float_array
 
+import numpy as np
 import cv2
 import os
 
@@ -31,8 +33,6 @@ class Image:
         nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
             self.__image, connectivity=8)
 
-        index = 0
-
         # On itère dans tous les composents calculés
         for i in range(0, nb_component):
             # S'il est dans le seuil en terme de taille, on le choisit
@@ -55,8 +55,7 @@ class Image:
                     'directory_path': self.__directory
                 }
 
-                self.__components.append(Component(data, index))
-                index = index + 1
+                self.__components.append(Component(data))
 
     def calculate_gfds(self):
         """
@@ -113,12 +112,48 @@ class Image:
         # On écrit l'image
         cv2.imwrite(path+"image"+str(index)+".jpg", image_to_write)
 
-    def clustrize(self):
+    def clustrize(self, nombre_cluster):
         """
         Clusterize les données et les stock dans l'array en attribut
         """
+        nb_cluster = nombre_cluster
+        # On déclare le tableau que contient les données
+        gfd = np.zeros(
+            (len(self.__components), int(self.__components[0].get_gfd_size())))
+        compteur = 0
 
-        nb_cluster = 2
+        # Pour tout les composants on récupère les GFDs
+        for item in self.__components:
+            gfd[compteur, ] = item.get_gfd()
+            compteur = compteur + 1
+
+        model = KMeans(n_clusters=nb_cluster)
+        model.fit(gfd)
+        print(model.labels_)
+
+        """ 
+        model = KMeans(n_clusters=nb_cluster)  # on déclare notre model
+        model.fit(gfd)"""
+
+        """
+        array = target.get_all_gfd_files()
+
+        ##Lis les fichiers pour créer une liste de liste de float
+        gfd = []
+        for element in array:
+            path = element['gfd']
+            with open(path, 'r') as filein:
+                values = filein.readlines()
+                for i in range(values):
+                    values[i] = float(values[i])
+                gfd.append(values)
+
+        ## K-means (nombre de clusters souhaités en paramètre)
+        model = KMeans(8).fit(gfd)
+
+        for i in range(len(array)):
+            array[i]['label'] = model[i]
+        """
 
     # SETTERS ET GETTERS
 

@@ -1,5 +1,2 @@
-// Fichier contenant les todos pour la semaine
-
-    - Implémenter la lecture des images
-    - Trouver une structure pour le projet (A décrire dans un fichier)
-    - Implémenter l'algorithme de Composante Connex
+Faire la fonction de clustering
+-> Ajouter les M et N dans le fichier de config pour GFD

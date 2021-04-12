@@ -125,4 +125,10 @@ class GFD:
                     gfd_numbers[rad*n + ang] = (math.sqrt(
                         math.pow(FR[rad, ang], 2)) + math.sqrt(math.pow(FI[rad, ang], 2))) / DC
 
-        return gfd_numbers
+        tab = []  # Un tableau de float
+
+        for item in gfd_numbers:
+            value = float(item)
+            tab.append(value)
+
+        return (m*n, tab)

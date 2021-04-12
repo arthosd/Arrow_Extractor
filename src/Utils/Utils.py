@@ -18,3 +18,18 @@ def read_gfd(file_path):
             tab.append(float(line))
 
     return tab
+
+
+def convert_float_array(array):
+    """
+    Convertit un tableau numpy en tableau de float
+    """
+    tab = []  # Va contenir toutes les nouvelles valeures
+
+    # On converti tous les items dans les arrays
+    for item in array:
+
+        value = float(item)
+        tab.append(value)
+
+    return tab

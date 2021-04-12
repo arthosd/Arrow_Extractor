@@ -15,4 +15,5 @@ image = Image("/home/elie/Documents/Projet/Fac/Arrow_Extractor/RESJPG/E110/",
 # On calcul les composantes connexe
 image.calculate_components(1500, 8500)
 image.calculate_gfds()
-image.save_data(target.path)
+# image.save_data(target.path)
+image.clustrize(2)
