@@ -159,8 +159,6 @@ class Image:
 
         model = KMeans(n_clusters=nb_cluster)
         model.fit(gfd)
-
-        print(model.labels_)
         self.__clustered = model.labels_
 
     # SETTERS ET GETTERS

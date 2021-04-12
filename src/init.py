@@ -15,8 +15,9 @@ for key, path in fm.subdirectories.items():
     for file in files:                          # On traite chaque fichier
 
         image = Image(path, file)               # On ouvre l'image
-        image.calculate_components(1500, 8500)  # On calcul les CC
-        image.calculate_gfds()                  # On calcul les GFDs
-        if image.get_components != 0:
-            image.clusterize()                   # On clusterize
+        image.calculate_components(250, 10000)  # On calcul les CC
+
+        if len(image.get_components()) != 0:
+            image.calculate_gfds()              # On calcul les GFDs
+            image.clusterize()                  # On clusterize
             image.save_data(target.path)        # On enregistre les données

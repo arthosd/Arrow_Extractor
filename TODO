@@ -1,3 +1,4 @@
 TODO :
 
-    Faire la fonction qui va négativer toutes les images
+    - Faire le garde fou pour la méthode de clusterisation
+        -> Il faut que le nomdre d'éléments soit toujours supérieur au nonmbre de cluster
