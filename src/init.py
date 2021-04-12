@@ -5,13 +5,22 @@ from File_Structure.Target import Target
 import numpy as np
 import os
 
+fm = File_Manager()
 target = Target()
 
-# On load l'image
-image = Image("//home/elie/Documents/Projet/Fac/Arrow_Extractor/RESJPG/E110/",
-              "E1106400.jpg.pgm.jpg")
+# On liste toutes les
+for key, path in fm.subdirectories.items():
+    files = os.listdir(path)
 
-image.invert_color()
+    for file in files:                          # On traite chaque fichier
+
+        image = Image(path, file)               # On ouvre l'image
+        image.calculate_components(1500, 8500)  # On calcul les CC
+        image.calculate_gfds()                  # On calcul les GFDs
+        image.clustrize()                       # On clusterize
+        image.save_data(target.path)            # On enregistre les données
+
+# On load l'image
 
 """
 # On calcul les composantes connexe
