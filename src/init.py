@@ -17,17 +17,6 @@ for key, path in fm.subdirectories.items():
         image = Image(path, file)               # On ouvre l'image
         image.calculate_components(1500, 8500)  # On calcul les CC
         image.calculate_gfds()                  # On calcul les GFDs
-        image.clustrize()                       # On clusterize
-        image.save_data(target.path)            # On enregistre les données
-
-# On load l'image
-
-"""
-# On calcul les composantes connexe
-image.calculate_components(1500, 8500)
-# ON calcul les gfd des composantes connexes
-image.calculate_gfds()
-# On clusturize
-image.clustrize()
-# On sauvegarde les résultats dans le target
-image.save_data(target.path)"""
+        if image.get_components != 0:
+            image.clustrize()                   # On clusterize
+            image.save_data(target.path)        # On enregistre les données

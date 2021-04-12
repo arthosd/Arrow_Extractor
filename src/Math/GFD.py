@@ -108,13 +108,15 @@ class GFD:
                         if theta < 0:
                             theta = theta + (2*math.pi)
 
-                        FR[rad, ang] = FR[rad, ang] + image[x, y] * \
-                            math.cos(2 * math.pi * rad *
-                                     (radius / MAXRAD) + ang * theta)
+                        if image[x, y] == 255:
 
-                        FI[rad, ang] = FR[rad, ang] - image[x, y] * \
-                            math.sin(2 * math.pi * rad *
-                                     (radius / MAXRAD) + ang * theta)
+                            FR[rad, ang] = FR[rad, ang] + 1 * \
+                                math.cos(2 * math.pi * rad *
+                                         (radius / MAXRAD) + ang * theta)
+
+                            FI[rad, ang] = FR[rad, ang] - 1 * \
+                                math.sin(2 * math.pi * rad *
+                                         (radius / MAXRAD) + ang * theta)
 
         # On calcule GFD
 

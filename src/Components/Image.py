@@ -114,13 +114,9 @@ class Image:
         for i in range(0, int(self.__config.get("CLUSTER", "nombre_cluster"))):
             os.mkdir(path+"/cluster"+str(i))
 
-        compteur = 0
-        for component in self.__components:
-
+        for index, component in enumerate(self.__components):
             self._save_component_image(
-                compteur, path+"cluster"+str(self.__clustered[compteur])+"/")
-
-            compteur = compteur + 1
+                index, path+"cluster"+str(self.__clustered[index])+"/")
 
     def _save_gfd(self, index, path):
         """
@@ -145,21 +141,21 @@ class Image:
         # On écrit l'image
         cv2.imwrite(path+"image"+str(index)+".jpg", image_to_write)
 
-    def clustrize(self, save=False, target_path=None):
+    def clusterize(self, save=False, target_path=None):
         """
         Clusterize les données et les stock dans l'array en attribut
         """
+        size = int(self.__config.get("GFD", "rad")) * \
+            int(self.__config.get("GFD", "ang"))
 
         nb_cluster = int(self.__config.get("CLUSTER", "nombre_cluster"))
         # On déclare le tableau que contient les données
         gfd = np.zeros(
-            (len(self.__components), int(self.__components[0].get_gfd_size())))
-        compteur = 0
+            (len(self.__components), size))
 
         # Pour tout les composants on récupère les GFDs
-        for item in self.__components:
+        for compteur, item in enumerate(self.__components):
             gfd[compteur, ] = item.get_gfd()
-            compteur = compteur + 1
 
         model = KMeans(n_clusters=nb_cluster)
         model.fit(gfd)
