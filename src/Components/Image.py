@@ -42,7 +42,7 @@ class Image:
         """
 
         nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
-            self.__image, connectivity=8)
+            self.__image, connectivity=4)
 
         # On itère dans tous les composents calculés
         for i in range(0, nb_component):
@@ -63,10 +63,11 @@ class Image:
                     'area': stats[i, cv2.CC_STAT_AREA],
                     'image': self.__image,
                     'nom_image': self.__image_name,
-                    'directory_path': self.__directory
+                    'directory_path': self.__directory,
+                    'label': labels
                 }
 
-                self.__components.append(Component(data))
+                self.__components.append(Component(data, i))
 
     def calculate_gfds(self):
         """
@@ -110,7 +111,7 @@ class Image:
         """
         Sauvegarde les clusters dans un sous dossier
         """
-
+        # On crée les subdirectories
         for i in range(0, int(self.__config.get("CLUSTER", "nombre_cluster"))):
             os.mkdir(path+"/cluster"+str(i))
 
@@ -157,9 +158,11 @@ class Image:
         for compteur, item in enumerate(self.__components):
             gfd[compteur, ] = item.get_gfd()
 
-        model = KMeans(n_clusters=nb_cluster)
-        model.fit(gfd)
-        self.__clustered = model.labels_
+        if len(self.__components) >= nb_cluster:
+
+            model = KMeans(n_clusters=nb_cluster)
+            model.fit(gfd)
+            self.__clustered = model.labels_
 
     # SETTERS ET GETTERS
 

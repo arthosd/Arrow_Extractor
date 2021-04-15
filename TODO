@@ -1,4 +1,5 @@
 TODO :
 
-    - Faire le garde fou pour la méthode de clusterisation
-        -> Il faut que le nomdre d'éléments soit toujours supérieur au nonmbre de cluster
+    - Il faut inverser l'écritures des composants qui se fait à 90 dégrés
+
+    - Il fatu voir pourquoi on obtient composants pas très beau
