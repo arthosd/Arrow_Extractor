@@ -41,8 +41,13 @@ class Image:
         Calcule les composantes connexe de l'image
         """
 
+        # On binarize l'image avec un seuil de 50
+        ret, thresh1 = cv2.threshold(self.__image, 50, 255, cv2.THRESH_BINARY)
+
+        print(ret)
+
         nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
-            self.__image, connectivity=4)
+            thresh1, connectivity=4)
 
         # On itère dans tous les composents calculés
         for i in range(0, nb_component):
