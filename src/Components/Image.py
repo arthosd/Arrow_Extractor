@@ -42,12 +42,11 @@ class Image:
         """
 
         # On binarize l'image avec un seuil de 50
-        ret, thresh1 = cv2.threshold(self.__image, 50, 255, cv2.THRESH_BINARY)
-
-        print(ret)
+        ret, self.__image = cv2.threshold(
+            self.__image, 50, 255, cv2.THRESH_BINARY)
 
         nb_component, labels, stats, centroid = cv2.connectedComponentsWithStats(
-            thresh1, connectivity=4)
+            self.__image, connectivity=8)
 
         # On itère dans tous les composents calculés
         for i in range(0, nb_component):
@@ -120,9 +119,10 @@ class Image:
         for i in range(0, int(self.__config.get("CLUSTER", "nombre_cluster"))):
             os.mkdir(path+"/cluster"+str(i))
 
-        for index, component in enumerate(self.__components):
-            self._save_component_image(
-                index, path+"cluster"+str(self.__clustered[index])+"/")
+        if len(self.__clustered) > 0:
+            for index, component in enumerate(self.__components):
+                self._save_component_image(
+                    index, path+"cluster"+str(self.__clustered[index])+"/")
 
     def _save_gfd(self, index, path):
         """
