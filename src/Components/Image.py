@@ -120,7 +120,7 @@ class Image:
             if os.path.exists(path+"cluster"+str(i)) == False:
                 os.mkdir(path+"cluster"+str(i))
             else:
-                print(path+"cluster"+str(i) + " already exist")
+                print("\t"+path+"cluster"+str(i) + " already exist")
 
         if len(self.__clustered) > 0:
             for index, component in enumerate(self.__components):
