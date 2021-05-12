@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from Math.GFD import GFD
+from Math.gfd import gfd
 import configparser
 import os
 
@@ -27,14 +27,18 @@ class Component:
         Applique la fonction GFD sur le composent
         """
         image = self.__image_component
-        gfd = GFD(self.__data, image)
 
-        reponse = gfd.gfd()
+        centroid = self.__data['centroid']
+
+        cx = centroid[0]
+        cy = centroid[1]
+
+        reponse = gfd(image, cx, cy)
 
         self.__gfd = reponse[1]
         self.__gfd_size = reponse[0]
 
-    def _copy_in_image(self):  # A RE ECRIRE C'EST JUSTE POUR LE TEST
+    def _copy_in_image(self):
         """
         Met dans une image la zone du composant
         """
