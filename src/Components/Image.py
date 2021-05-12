@@ -1,6 +1,5 @@
 from Components.Component import Component
 from sklearn.cluster import KMeans
-from Utils.Utils import convert_float_array
 
 import numpy as np
 import configparser
@@ -38,7 +37,7 @@ class Image:
 
     def calculate_components(self, seuil_inferieur, seuil_superieur):
         """
-        Calcule les composantes connexe de l'image
+        Calcule les composantes connexes de l'image
         """
 
         # On binarize l'image avec un seuil de 50
@@ -115,9 +114,13 @@ class Image:
         """
         Sauvegarde les clusters dans un sous dossier
         """
+
         # On crée les subdirectories
         for i in range(0, int(self.__config.get("CLUSTER", "nombre_cluster"))):
-            os.mkdir(path+"/cluster"+str(i))
+            if os.path.exists(path+"cluster"+str(i)) == False:
+                os.mkdir(path+"cluster"+str(i))
+            else:
+                print(path+"cluster"+str(i) + " already exist")
 
         if len(self.__clustered) > 0:
             for index, component in enumerate(self.__components):

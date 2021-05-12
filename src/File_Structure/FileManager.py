@@ -16,19 +16,17 @@ class File_Manager:
 
         self._init()
 
-    """
-    initialise les attibuts de liste
-    """
-
     def _init(self):
+        """
+        initialise les attibuts de liste
+        """
         self._save_sub_directories()
         self._list_sub_directories()
 
-    """
-    Liste les repertoires du repertoire source. (Et créer une dictionnaire pour les garder en mémoire)
-    """
-
     def _save_sub_directories(self):
+        """
+        Liste les repertoires du repertoire source. (Et créer une dictionnaire pour les garder en mémoire)
+        """
 
         for file in os.listdir(self.directory_path):
             if file[0] != '.':
@@ -36,11 +34,10 @@ class File_Manager:
                     self.subdirectories[file] = self.directory_path + \
                         "/"+file+"/"
 
-    """
-    Listes et enregistre les NOMS des répoertoires dans la classe
-    """
-
     def _list_sub_directories(self):
+        """
+        Listes et enregistre les NOMS des répoertoires dans la classe
+        """
 
         for file in os.listdir(self.directory_path):
             if file[0] != '.':
@@ -49,9 +46,8 @@ class File_Manager:
 
         return self.subdirectories_name
 
-    """
-    Retourne le chemin d'un sous dossier
-    """
-
     def get_subDirectory_path(self, directory_name):
+        """
+        Retourne le chemin d'un sous dossier
+        """
         return self.subdirectories(directory_name)
