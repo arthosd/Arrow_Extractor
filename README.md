@@ -1,31 +1,50 @@
 # Arrow Extractor
-This project is an extention of Dr. Laurent Wendling works on Medical Arrow detector for medical purposes. 
+
+This project is an extention of Dr. Laurent Wendling works on Medical Arrow detector for medical purposes.
 
 ## Getting Started
 
-First you'll need to install [python version 3](https://www.python.org/downloads/) . If you're on Ubuntu, you can install it using your Package Manager by  typing the following commands :  
+Before running the project you'll need to install run the following commands to install all the necessary dependencies.
 
-  ```bash
-  sudo apt-get update
-  sudo apt-get install python3.6
-  ```
+### Dependencies
 
-You'll then need to install [openCV](https://linuxize.com/post/how-to-install-pip-on-ubuntu-20.04/) :
+```bash
+pip3 install -U opencv-python
+pip3 install -U scikit-learn
+pip3 install -U numpy
+```
 
- ```bash
-  sudo apt-get install python3-pip
-  sudo apt-get install python3.6
-  pip3 install opencv-python
-  ```
+### Configuration files
 
-When python and openCV are installed, clone this repository by typing the following command :
+You'll need to configure the project by assigning a target directory and the source directory in the src/Config/config.cfg.
 
-  ```bash
-  git clone git@github.com:arthosd/Arrow_Extractor.git
-  ```
+- **_Only use data that are arrange in subdirectories. You can checkcRESJPG's structure to create your own directory's structure._**
 
- ## Ressources
- 
- * openCV 4 hours [tutorial](https://www.youtube.com/watch?v=oXlwWbU8l2o&ab_channel=freeCodeCamp.org)
- * Algortihme [documentation](https://www.youtube.com/watch?v=tfcShJ5LRNQ&ab_channel=JohnChaussard)
+- **_For evaluation use RESJPG directory._**
 
+The following explains the different parameters of the config file.
+
+```cfg
+[RESSOURCES]
+target_directory = ------- > Directory where result are stored
+src_directory = ------- > Directory from where are the data to cluster
+
+[GFD]
+rad = 6 ---> Radian frenquency
+ang = 6 ---> Angular frenquency
+
+[CLUSTER]
+nombre_cluster = 2 ---> Number of cluster for clustering data
+
+[FILTRE]
+si = 500 --> Minimal surface to accept component
+ss = 1000 --> Maximal surface to accept component
+```
+
+## Running the project
+
+When all librairies are installed run the following command **_project's root_** to run the project.
+
+```
+python3 src/init.py
+```

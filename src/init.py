@@ -13,7 +13,6 @@ config.read("src/Config/config.cfg")
 # File managing
 fm = File_Manager()
 target = Target()
-
 compteur = 1
 
 # On liste toutes les
